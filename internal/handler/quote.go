@@ -15,7 +15,7 @@ func NewQuote(quoteService *service.Quote) *Quote  {
     return &Quote{quoteService: quoteService}
 }
 
-func (h *Quote) Get(c echo.Context) error {
+func (h *Quote) GetQuote(c echo.Context) error {
     q, err:= h.quoteService.Get(c.Request().Context())
     if err!=nil{
         log.Errorf("error getting quote %s", err)

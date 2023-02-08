@@ -4,6 +4,7 @@ import (
     "fmt"
     "github.com/hubaxis/pow-server/internal/config"
     "github.com/hubaxis/pow-server/internal/handler"
+    "github.com/hubaxis/pow-server/internal/middleware"
     "github.com/hubaxis/pow-server/internal/repository"
     "github.com/hubaxis/pow-server/internal/service"
 
@@ -24,15 +25,14 @@ func main() {
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
 
-    // in terms we don't uses it
-    _ = ctx
     sigChan := make(chan os.Signal, 1)
     signal.Notify(sigChan, syscall.SIGTERM)
     chuckNorrisRps:= repository.NewChackNoris(cfg.ChuckNorrisEndpoint)
     quoteService:= service.NewQuote(chuckNorrisRps)
     quoteHandler:= handler.NewQuote(quoteService)
+    mw:= middleware.NewPow(ctx)
     e := echo.New()
-    e.GET("/", quoteHandler.Get)
+    e.POST("/", quoteHandler.GetQuote, mw.Process)
 
     go func() {
     e.Logger.Fatal(e.Start(fmt.Sprintf(":%d",cfg.Port)))

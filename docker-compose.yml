@@ -1,0 +1,15 @@
+version: '2'
+services:
+    server:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+            - "44444:44444"
+    pow:
+        build:
+            context: ./
+            dockerfile: Dockerfile.client
+networks:
+    default:
+        driver: bridge

@@ -17,22 +17,22 @@ func NewChackNoris(endpoint string) *ChuckNorris {
 }
 
 func (r *ChuckNorris) Get(ctx context.Context) (string, error){
-    resp, err := http.Get(r.endpoint)
+    rsp, err := http.Get(r.endpoint)
     if err != nil {
        return "", fmt.Errorf("get %w", err)
     }
     //We Read the response body on the line below.
-    body, err := io.ReadAll(resp.Body)
+    body, err := io.ReadAll(rsp.Body)
     if err != nil {
         return "", fmt.Errorf("read all %w", err)
     }
     type response struct {
         Value string `json:"value"`
     }
-    rsp:=&response{}
-    err= json.Unmarshal(body, rsp)
+    data:=&response{}
+    err= json.Unmarshal(body, data)
     if err != nil {
         return "", fmt.Errorf("unmarshal %w", err)
     }
-    return rsp.Value, nil
+    return data.Value, nil
 }
