@@ -1,2 +1,2 @@
 ### How to run
-`docker compose up`
+`docker compose up` or `make run`
